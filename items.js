@@ -1,23 +1,20 @@
 function GiveItem(str,c=1){items.find(x=>x.name==str).count+=c;}
 function GiveItemByID(i,c=1){items[i].count+=c;}
+async function RenewableItem(item="Paper",count=1,ms=1000){
+	await delay(ms);
+	GiveItem(item,count);
+	RenewableItem(item,count,ms);
+	DisplayItems();
+}
 function SetupItems(){	items=new Array(0);
-	//let allItemCount=regularItems.length+craftableItems.length+stationsItems.length;
-	//items=new Array(allItemCount);
-	//for(let i=0;i<allItemCount;i++){items[i]=new Item();}//items[i].name="";}
 	console.log(regularItems);
 	console.log(craftableItems);
 	console.log(stationsItems);
-	/*for(let i=0,j=0;i<allItemCount;i++,j++){	let n="";
-		if(items[i].name===""||items[i].name===undefined){
-			for(j=0;j<regularItems.length;j++){items[i].name=regularItems[j].name;}
-			for(j=0;j<craftableItems.length;j++){items[i].name=craftableItems[j].name;}
-			for(j=0;j<stationsItems.length;j++){items[i].name=stationsItems[j].name;}
-		}
-	}*/
 	for(let i=0;i<regularItems.length;i++){items.push(new Item(name=regularItems[i]));}
 	for(let i=0;i<craftableItems.length;i++){let it=new Item(name=craftableItems[i]);it.craftable=true;items.push(it);}
 	for(let i=0;i<stationsItems.length;i++){let it=new Item(name=stationsItems[i]);it.station=true;items.push(it);}
 	for(let i=0;i<craftableStationsItems.length;i++){items.find(x=>x.name==craftableStationsItems[i]).craftable=true;}
+	items.sort();
 	
 	console.log(items);
 }
@@ -33,19 +30,32 @@ function SetupRecipes(){	recipes=new Array(0);
 function DisplayItems(){
 	console.log(items);
 	for(let i=0;i<items.length;i++){
-		if(items[i].craftable){$("#item"+i).html("<button class='tdButton' id='"+('item'+i)+"_bt'><img src='"+GetImg(items[i].name)+"'alt="+items[i].name+" class='tdImg'>"+"<br><span class='tdText'>"+items[i].count+"</span></button>");}
-		else{$("#item"+i).html("<img src='"+GetImg(items[i].name)+"' alt="+items[i].name+" class='tdImg'>"+"<br><span class='tdText'>"+items[i].count+"</span>");}
-		
-		if(items[i].craftable){$("#item"+i+"_bt").on("click", CraftItem.bind(this,i));}
+		if(items[i].craftable){
+			$("#item"+i).html("<button class='tdButton' id='"+('item'+i)+"_bt'><img src='"+GetImg(items[i].name)+"'alt="+items[i].name+" class='tdImg'>"+"<br><span class='tdText'>"+items[i].count+"</span></button>");
+				/*let child=$("#item"+i).children("button").children("img");
+				console.log(child);
+				child.on('error',function handleError(){console.log(child.src);child.attr("src",(imgPath+"empty.png"));console.log(child.src);child.attr("style.visibility",'hidden');});*/
+			$("#item"+i+"_bt").on("click", CraftItem.bind(this,i));
+		}else{
+			$("#item"+i).html("<img src='"+GetImg(items[i].name)+"' alt="+items[i].name+" class='tdImg'>"+"<br><span class='tdText'>"+items[i].count+"</span>");
+				/*let child=$("#item"+i).children("img");
+				console.log(child);
+				child.on('error',function handleError(){console.log(child.src);child.attr("src",(imgPath+"empty.png"));console.log(child.src);child.attr("style.visibility",'hidden');});*/
+		}
 	}
 }
 function GiveStartingItems(){
-	GiveItem("Rock",99);//temp
-	GiveItem("Paper",99);//temp
-	GiveItem("Scissors",99);//temp
+	if(itemsNeededToMove){
+		GiveItem("Rock",10);
+		GiveItem("Paper",10);
+		GiveItem("Scissors",10);
+	}
 	GiveItem("Compressor",5);
+	
+	if(renewablePaper)RenewableItem("Paper",1,renewablePaperMs);
 }
 function CraftItem(i){if(items[i]!=null){
+	console.log(recipes);
 	let recipe=recipes.find(x=>x.name==items[i].name);
 	if(recipe!=null){
 		if(recipe.item1!=""&&recipe.item2!=""&&recipe.item3!=""){//3 ingredients
@@ -60,12 +70,12 @@ function CraftItem(i){if(items[i]!=null){
 			){
 			if(station==""||(station!=""&&station.count>=recipe.stUses)){
 				if(itemResult!=null){
-					item1.count-=item1Cost;
-					item2.count-=item2Cost;
-					item3.count-=item3Cost;
+					item1.count-=recipe.item1Cost;
+					item2.count-=recipe.item2Cost;
+					item3.count-=recipe.item3Cost;
 					if(station!=""){station.count-=recipe.stUses;}
 					itemResult.count+=recipe.count;
-					console.log("Item crafted: "+itemResult.name+" x"+recipe.count+" times");
+					console.log("Item crafted: "+itemResult.name+" x"+recipe.count+" times for "+recipe.item1Cost+"x "+item1.name);
 				}else{console.error("NO ITEM FOUND FOR: "+recipe.name);}
 			}
 			}
@@ -80,11 +90,11 @@ function CraftItem(i){if(items[i]!=null){
 			){
 			if(station==""||(station!=""&&station.count>=recipe.stUses)){
 				if(itemResult!=null){
-					item1.count-=item1Cost;
-					item2.count-=item2Cost;
+					item1.count-=recipe.item1Cost;
+					item2.count-=recipe.item2Cost;
 					if(station!=""){station.count-=recipe.stUses;}
 					itemResult.count+=recipe.count;
-					console.log("Item crafted: "+itemResult.name+" x"+recipe.count+" times");
+					console.log("Item crafted: "+itemResult.name+" x"+recipe.count+" times for "+recipe.item1Cost+"x "+item1.name);
 				}else{console.error("NO ITEM FOUND FOR: "+recipe.name);}
 			}
 			}
@@ -97,22 +107,21 @@ function CraftItem(i){if(items[i]!=null){
 			){
 			if(station==""||(station!=""&&station.count>=recipe.stUses)){
 				if(itemResult!=null){
-					item1.count-=item1Cost;
+					item1.count-=recipe.item1Cost;
 					if(station!=""){station.count-=recipe.stUses;}
 					itemResult.count+=recipe.count;
-					console.log("Item crafted: "+itemResult.name+" x"+recipe.count+" times");
+					console.log("Item crafted: "+itemResult.name+" x"+recipe.count+" times for "+recipe.item1Cost+"x "+item1.name);
 				}else{console.error("NO ITEM FOUND FOR: "+recipe.name);}
 			}
 			}
-		}
-		else{//no ingredients, pure station
+		}else{//no ingredients, pure station
 			let itemResult=items.find(x=>x.name==recipe.name);
 			let station="";if(recipe.station!="")station=items.find(x=>x.name==recipe.station);
 			if(station!=""&&station.count>recipe.stUses){
 				if(itemResult!=null){
 					if(station!=""){station.count-=recipe.stUses;}
 					itemResult.count+=recipe.count;
-					console.log("Item crafted: "+itemResult.name+" x"+recipe.count+" times");
+					console.log("Item crafted: "+itemResult.name+" x"+recipe.count+" times for "+item1Cost+"x "+item1.name);
 				}else{console.error("NO ITEM FOUND FOR: "+recipe.name);}
 			}
 		}

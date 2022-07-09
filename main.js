@@ -42,6 +42,9 @@ class Recipe{
 var recipes=new Array(0);
 
 var trueRandomCPU=false;
+var renewablePaper=true;
+var renewablePaperMs=3000;
+var itemsNeededToMove=true;
 var imgPath="src/img/";
 /// }
 
@@ -53,15 +56,17 @@ setTimeout(function Setup(){
 		$("#move"+i).html("<img src="+GetImg(TranslateMove(i))+" alt="+TranslateMove(i)+">");
 	}
 	SetupItems();
-	let itemTable=$("#itemsTable");
+	var itemTable="<table>";
 	for(let i=0;i<items.length/3;i++){
-		let itemRow=$(itemTable).append('<tr id="itemsRow'+i);
-		for(let j=0;j<items.length;j++){
-			$(itemRow).append('<td class="tdItem" id="item'+j+'">');
+		itemTable+='<tr id="itemsRow'+i+'">';
+		for(let j=0;j<3;j++){
+			let id=(j+(3*i));
+			itemTable+='<td class="tdItem" id="item'+id+'"></td>';
 		}
-		$(itemTable).append('</tr>');
-		$(itemTable).append("</tdbody>");
+		itemTable+='</tr>';
 	}
+	itemTable+="</table>";
+	$('#itemsTable').append(itemTable);
 	
 	SetupRecipes();
 	
@@ -84,6 +89,13 @@ setTimeout(function Setup(){
 },100);
 
 function UseMove(m){
+	if(itemsNeededToMove){
+		if(items.find(x=>x.name==TranslateMove(m))!=null){
+			let item=items.find(x=>x.name==TranslateMove(m));
+			if(item.count>=1){item.count-=1;}
+			else{return;}
+		}
+	}else{}
 	move=m;
 	$("#mMovePlayer").html("<img src="+GetImg(TranslateMove(move))+">")
 	
@@ -121,68 +133,6 @@ function SumupRound(){
 	
 	DisplayItems();
 }
-//}
-
-
-//#region  Other
-function Randomize(min,max){return Math.floor(Math.random()*(max-min+1))+min;}
-function checkIfFileExist(urlToFile) {
-    /*var xhr = new XMLHttpRequest();
-    xhr.open('HEAD', urlToFile, false);
-    xhr.send();
-     
-    if (xhr.status == "404") {
-        return false;
-    } else {
-        return true;
-    }*/
-	$.ajax({
-		url:urlToFile,
-		type:'HEAD',
-		error: function(){
-			return false;
-		},
-		success: function(){
-			return true
-		}
-	});
-}
-function _ifFileExist(src) {
-    var xhr = new XMLHttpRequest()
-    xhr.onreadystatechange = function() {
-        if (this.readyState === this.DONE) {
-            return true;
-        }
-    }
-    xhr.open('HEAD', src)
-}
-function executeIfFileExist(src, callback) {
-    var xhr = new XMLHttpRequest()
-    xhr.onreadystatechange = function() {
-        if (this.readyState === this.DONE) {
-            callback()
-        }
-    }
-    xhr.open('HEAD', src)
-}
-
-function GetImg(name){
-	let def="empty";let path=(imgPath+def+".png");let path2=(imgPath+name+".png");
-	try{
-		executeIfFileExist(path2,(path=path2));
-	}catch(err){
-		console.error(err);
-	}
-	return path;
-}
-function TranslateMove(m){	let moveName="";
-	switch(m){
-		case 1: moveName="Rock";break;
-		case 2: moveName="Paper";break;
-		case 3: moveName="Scissors";break;
-		default: moveName="??";break;
-	}return moveName;
-}
 function WinConditions(){
 	if(move==moveCPU||move==0||moveCPU==0){return 0;}
 	if(move==1&&moveCPU==2){return 2;}//Rock vs Paper
@@ -192,7 +142,6 @@ function WinConditions(){
 	if(move==3&&moveCPU==1){return 2;}//Scissors vs Rock
 	if(move==3&&moveCPU==2){GiveItem("Paper");return 1;}//Scissors vs Paper
 }
-
 function SetLastMovesPlayer(){
 	if(isNaN(last3MovesPlayer[0])){
 		last3MovesPlayer[0]=move;
@@ -233,4 +182,70 @@ function SetLastCPUMoves(){
 		
 	function DebugLog(){console.log("CPU: "+last3MovesCPU);return;}
 }
+//}
+
+
+//#region  Other
+function Randomize(min,max){return Math.floor(Math.random()*(max-min+1))+min;}
+/*function checkIfFileExist(urlToFile) {
+    /*var xhr = new XMLHttpRequest();
+    xhr.open('HEAD', urlToFile, false);
+    xhr.send();
+     
+    if (xhr.status == "404") {
+        return false;
+    } else {
+        return true;
+    }
+	$.ajax({
+		url:urlToFile,
+		type:'HEAD',
+		error: function(){
+			return false;
+		},
+		success: function(){
+			return true
+		}
+	});
+}
+function _ifFileExist(src) {
+    var xhr = new XMLHttpRequest()
+    xhr.onreadystatechange = function() {
+        if (this.readyState === this.DONE) {
+            return true;
+        }
+    }
+    xhr.open('HEAD', src)
+}*/
+function executeIfFileExist(src, callback) {
+    var xhr = new XMLHttpRequest()
+    xhr.onreadystatechange = function() {
+        if (this.readyState === this.DONE) {
+            callback()
+        }
+    }
+    xhr.open('HEAD', src)
+}
+
+function GetImg(name){
+	let pathDef=(imgPath+"empty.png");let pathImg=(imgPath+name+".png");let path=pathDef;
+	/*if(pathImg===pathDef)*/path=pathImg;
+	/*try{
+		executeIfFileExist(pathImg,path=pathDef);
+		//if((imgPath+name+".png")!=null)path=pathImg;
+	}catch(err){
+		console.error(err);
+	}*/
+	return path;
+}
+function TranslateMove(m){	let moveName="";
+	switch(m){
+		case 1: moveName="Rock";break;
+		case 2: moveName="Paper";break;
+		case 3: moveName="Scissors";break;
+		default: moveName="??";break;
+	}return moveName;
+}
+const delay = async (ms = 1000) => new Promise(resolve => setTimeout(resolve, ms));
+//async function RepeatDelayFunc(callback,ms){async delay ms;callback();}
 /// }
