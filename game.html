@@ -1,0 +1,44 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<title>Rock Paper Survivor - HyperGamesDev</title>
+<link rel="icon" href="src/img/icon.png">
+<link rel="stylesheet" href="style.css">
+<meta charset="utf-8">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="main.js"></script>
+<script src="enemyAI.js"></script>
+<script src="items.js"></script>
+<script src="assets.js"></script>
+</head>
+<body>
+<div id="mainCont">
+	<div id="logoCont">
+		<a href="index.html" onClick="PageRedirect('index.html')"><img src="src/img/icon.png" id="logo"></img><br></a>
+		<h3 id="title">Rock Paper Survivor -<br>
+		<a href="https://hypergamesdev.github.io" target="_blank">&nbsp;&nbsp;by HyperGamesDev</a></h3><br>
+	</div><br>
+	<table id="choicesTable"><tr>
+		<td id="choice-r"><button class="tdButton" id="move1">Rock</button></td>
+		<td id="choice-p"><button class="tdButton" id="move2">Paper</button></td>
+		<td id="choice-s"><button class="tdButton" id="move3">Scissors</button></td>
+	</tr></table>
+	<div id="outcomeData">
+		<table id='movesTable'><tr>
+			<td id='mMovePlayer'></td>
+			<td id='mVSicon'></td>
+			<td id='mMoveCPU'></td>
+		</tr></table>
+		<table id='mWinsLosses'><tr>
+			<td id='mPlayer'><div id='mWinPlayer_IMG'></div><span id='mWinsPlayer'></span></td>
+			<td id='mDraw'><span id='mDraws'></span><div id='mDraws_IMG'></div></td>
+			<td id='mCPU'><div id='mWinCPU_IMG'></div><span id='mWinsCPU'></span></td>
+		</tr></table>
+	</div>
+	<div id="itemsTable"></div>
+	<!--<table id="stationsTable"></table>
+	<table id="craftablesTable"></table>!-->
+</div>
+</body>
+</html>
+

@@ -1,8 +1,14 @@
 body{
 	background-color:#1f1f2e;
 	color:white;
+	font-family:"Arial","Open Sans";
 }
 #mainCont{
+	float:left;
+	height:50%;
+	margin-left:40%;
+}
+#mainMenuCont{
 	float:left;
 	height:50%;
 	margin-left:40%;
@@ -65,10 +71,11 @@ td{
 	font-family:"Arial Black";
 	margin-left:-20%;
 }
+h1,h2,h3{font-family:"Arial Black";}
 
 a{text-decoration:none;color:#0088cc;}
 a:hover{color:#1ab2ff;}
-button{
+button,input[type=button]{
 	background-color:#666699;
 	border: solid #47476b;
 	border-radius: 5%;
@@ -76,6 +83,9 @@ button{
 	text-align: center;
 	text-decoration: none;
 	display: inline-block;
+}
+button:hover,input[type=button]:hover,a:hover{
+	cursor:pointer;
 }
 .tdItem{
 	background-color:#666699;
@@ -94,4 +104,45 @@ button{
 	margin-top:20%;
 	height:50px;
 	width:50px;
+}
+#startGameButton{
+	background-color:#666699;
+	color:white;
+	width:150px;
+	height:60px;
+	font-size:30pt;
+	font-family:"Arial Black";
+}
+
+
+.tooltip .tooltiptext {
+	visibility: hidden;
+	width: 120px;
+	background-color: black;
+	color: #fff;
+	text-align: center;
+	border-radius: 6px;
+	padding: 5px 0;
+
+	/* Position the tooltip */
+	position: absolute;
+	z-index: 1;
+}
+.tooltip:hover .tooltiptext {
+	visibility: visible;
+}
+
+.tooltip_Bot .tooltiptext_Bot {
+	width: 120px;
+	top: 100%;
+	left: 50%;
+	margin-left: -60px; /* Use half of the width (120/2 = 60), to center the tooltip */
+}
+.tooltip_Right .tooltiptext_Right {
+	top: -5px;
+	left: 105%;
+}
+.tooltip_Left .tooltiptext_Left {
+	top: -5px;
+	right: 105%;
 }

@@ -7,30 +7,27 @@
 <meta charset="utf-8">
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="main.js"></script>
-<script src="enemyAI.js"></script>
-<script src="items.js"></script>
+<script src="assets.js"></script>
 </head>
 <body>
-<div id="mainCont">
+<div id="mainMenuCont">
 	<div id="logoCont">
 		<img src="src/img/icon.png" id="logo"></img><br>
 		<h3 id="title">Rock Paper Survivor -<br>
 		<a href="https://hypergamesdev.github.io" target="_blank">&nbsp;&nbsp;by HyperGamesDev</a></h3><br>
 	</div><br>
-	<table id="choicesTable"><tr>
-		<td id="choice-r"><button class="tdButton" id="move1">Rock</button></td>
-		<td id="choice-p"><button class="tdButton" id="move2">Paper</button></td>
-		<td id="choice-s"><button class="tdButton" id="move3">Scissors</button></td>
-	</tr></table>
-	<div id="outcomeData">
-		<span id="movePlayer"></span><br>
-		<span id="moveCPU"></span><br><br>
-		<span id="winConditions"></span><br><br>
-		<span id="winsLosses"></span><br>
-	</div>
-	<div id="itemsTable"></div>
-	<!--<table id="stationsTable"></table>
-	<table id="craftablesTable"></table>!-->
+	<h2>Main Menu / Options</h2>
+	<table id="optionsTable"><form>
+		GameSpeed: <input type="range" id="gameSpeed-Input" value="1" min="1" max="99" onInput="this.nextElementSibling.value = this.value"></input><output>1</output><br>
+		Reverse Gametest: <input type="checkbox" id="reverseGametest-Checkbox"></input><br>
+		CPU Complexity: <select type="checkbox" id="cpuComplexity-List">
+			<option value="0">0 - Random</option>
+			<option value="1">1 - Basic</option>
+			<option value="2">2 - More advanced countering</option>
+			<option value="3" selected>3 - Full AI</option>
+		</select><br>
+		<br><input type="button" onClick="StartGame()" value="Start" id="startGameButton"></input><br>
+	</form></table>
 </div>
 </body>
 </html>
