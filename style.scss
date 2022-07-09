@@ -1,0 +1,193 @@
+$bgColor:#1f1f2e;
+$textColor:white;
+$link-color:#0088cc;
+$linkHover-color:#1ab2ff;
+
+$defFont:"Arial";
+$defFont2:"Open Sans";
+$bigFont:"Arial Black";
+
+$button-bgColor:#666699;
+$selectedStation-bgColor:#7979b4;
+$unownedStation-bgColor:#47476b;
+$button-borderColor:#47476b;
+$button-textColor:$textColor;
+$tooltip-bgColor:black;
+$tooltip-textColor:$textColor;
+
+$colorGreen:#80ffaa;
+$colorYellow:#cccc00;
+$colorRed:#ff6666;
+$colorBlue:#1ab2ff;
+
+html{min-height:150%;}
+body{
+	background-color:$bgColor;
+	color:$textColor;
+	font-family:$defFont,$defFont2;
+}
+a{text-decoration:none;color:$link-color;}
+a:hover{color:$linkHover-color;}
+h1,h2,h3{font-family:$bigFont;}
+
+button,input[type=button]{
+	background-color:$button-bgColor;
+	border: solid $button-borderColor;
+	border-radius: 5%;
+	color: $button-textColor;
+	text-align: center;
+	text-decoration: none;
+	display: inline-block;
+}
+.selectedStation{background-color:$selectedStation-bgColor;}
+.unownedStation{background-color:$unownedStation-bgColor;}
+button:hover,input[type=button]:hover,a:hover{cursor:pointer;}
+
+
+#mainCont{
+	float:left;
+	height:50%;
+	margin-left:40%;
+}
+#mainMenuCont{
+	float:left;
+	height:50%;
+	margin-left:40%;
+}
+#choicesTable{
+	margin-top:25%;
+}
+#outcomeData{
+	margin-top:10%;
+	text-align:center;
+}
+
+#itemsTablesContainer{
+	margin-left:-33%;
+	text-align:center;
+}
+#itemsTable{
+	float:left;
+}
+#craftingContainer{
+	float:left;
+	margin-left:10%;
+}
+#craftablesTable{
+	clear:both;
+	margin-top:5%;
+}
+
+#mMovePlayer,#mVSicon,#mMoveCPU,#mPlayer,#mCPU,#mDraw{
+	float:left;
+	width:100px;
+	height:100px;
+}
+#mWinPlayer_IMG,#mWinCPU_IMG{
+	position:relative;
+	left:50px;
+	width:50px;
+	height:50px;
+}
+#mWinPlayer_IMG{
+	left:-20px;
+}
+#mWinsPlayer,#mWinsCPU,#mDraws{
+	text-align:center;
+	font-family:$bigFont;
+}
+#mWinsPlayer{color:$colorGreen;}
+#mDraws{color:$colorYellow;}
+#mWinsCPU{color:$colorRed;}
+
+
+td{
+	float:left;
+	width:100px;
+	height:100px;
+}
+.tdButton{
+	height:100px;
+	width:100px;
+}
+.tdFiller{
+	height:100px;
+	width:100px;
+}
+.tdItem{
+	background-color:$button-bgColor;
+	border: solid $button-borderColor;
+	border-radius: 5%;
+	color: $button-textColor;
+	text-align: center;
+	text-decoration: none;
+	display: inline-block;
+}
+.tdText{
+	margin-top:40%;
+	font-family:$bigFont;
+}
+.tdImg{
+	margin-top:20%;
+	height:50px;
+	width:50px;
+}
+#startGameButton{
+	background-color:$button-bgColor;
+	color:$button-textColor;
+	width:150px;
+	height:60px;
+	font-size:30pt;
+	font-family:$bigFont;
+}
+
+
+
+#logoCont{
+	float:left;
+	width:70%;
+	margin-left:16%;
+	margin-bottom:5%;
+	text-align:justify;
+}
+#logo{
+	width:128px;
+	height:128px;
+}
+#title{
+	font-family:$bigFont;
+	margin-left:-20%;
+}
+
+//Tooltips
+.tooltip .tooltiptext {
+	visibility: hidden;
+	width: 120px;
+	background-color:$tooltip-bgColor;
+	color:$tooltip-textColor;
+	text-align: center;
+	border-radius: 6px;
+	padding: 5px 0;
+
+	/* Position the tooltip */
+	position: absolute;
+	z-index: 1;
+}
+.tooltip:hover .tooltiptext {
+	visibility: visible;
+}
+
+.tooltip_Bot .tooltiptext_Bot {
+	width: 120px;
+	top: 100%;
+	left: 50%;
+	margin-left: -60px; /* Use half of the width (120/2 = 60), to center the tooltip */
+}
+.tooltip_Right .tooltiptext_Right {
+	top: -5px;
+	left: 105%;
+}
+.tooltip_Left .tooltiptext_Left {
+	top: -5px;
+	right: 105%;
+}

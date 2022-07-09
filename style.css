@@ -1,148 +1,218 @@
-body{
-	background-color:#1f1f2e;
-	color:white;
-	font-family:"Arial","Open Sans";
-}
-#mainCont{
-	float:left;
-	height:50%;
-	margin-left:40%;
-}
-#mainMenuCont{
-	float:left;
-	height:50%;
-	margin-left:40%;
-}
-#choicesTable{
-	margin-top:25%;
-}
-#outcomeData{
-	margin-top:10%;
-	text-align:center;
-}
-td{
-	float:left;
-	width:100px;
-	height:100px;
-}
-.tdButton{
-	height:100px;
-	width:100px;
-}
-.tdFiller{
-	height:100px;
-	width:100px;
-}
-#mMovePlayer,#mVSicon,#mMoveCPU,#mPlayer,#mCPU,#mDraw{
-	float:left;
-	width:100px;
-	height:100px;
-}
-#mWinsLosses{}
-#mWinPlayer_IMG,#mWinCPU_IMG{
-	position:relative;
-	left:50px;
-	width:50px;
-	height:50px;
-}
-#mWinPlayer_IMG{
-	left:-20px;
-}
-#mWinsPlayer,#mWinsCPU,#mDraws{
-	text-align:center;
-	font-family:"Arial Black";
-}
-#mWinsPlayer{color:#80ffaa;}
-#mDraws{color:#cccc00;}
-#mWinsCPU{color:#ff6666;}
-#logoCont{
-	float:left;
-	width:70%;
-	margin-left:30%;
-	margin-bottom:20%;
-	text-align:justify;
-}
-#logo{
-	display:flex;
-	width:128px;
-	height:128px;
-}
-#title{
-	font-family:"Arial Black";
-	margin-left:-20%;
-}
-h1,h2,h3{font-family:"Arial Black";}
-
-a{text-decoration:none;color:#0088cc;}
-a:hover{color:#1ab2ff;}
-button,input[type=button]{
-	background-color:#666699;
-	border: solid #47476b;
-	border-radius: 5%;
-	color: white;
-	text-align: center;
-	text-decoration: none;
-	display: inline-block;
-}
-button:hover,input[type=button]:hover,a:hover{
-	cursor:pointer;
-}
-.tdItem{
-	background-color:#666699;
-	border: solid #47476b;
-	border-radius: 5%;
-	color: white;
-	text-align: center;
-	text-decoration: none;
-	display: inline-block;
-}
-.tdText{
-	margin-top:40%;
-	font-family:"Arial Black";
-}
-.tdImg{
-	margin-top:20%;
-	height:50px;
-	width:50px;
-}
-#startGameButton{
-	background-color:#666699;
-	color:white;
-	width:150px;
-	height:60px;
-	font-size:30pt;
-	font-family:"Arial Black";
+html {
+  min-height: 150%;
 }
 
+body {
+  background-color: #1f1f2e;
+  color: white;
+  font-family: "Arial", "Open Sans";
+}
+
+a {
+  text-decoration: none;
+  color: #0088cc;
+}
+
+a:hover {
+  color: #1ab2ff;
+}
+
+h1, h2, h3 {
+  font-family: "Arial Black";
+}
+
+button, input[type=button] {
+  background-color: #666699;
+  border: solid #47476b;
+  border-radius: 5%;
+  color: white;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.selectedStation {
+  background-color: #7979b4;
+}
+
+.unownedStation {
+  background-color: #47476b;
+}
+
+button:hover, input[type=button]:hover, a:hover {
+  cursor: pointer;
+}
+
+#mainCont {
+  float: left;
+  height: 50%;
+  margin-left: 40%;
+}
+
+#mainMenuCont {
+  float: left;
+  height: 50%;
+  margin-left: 40%;
+}
+
+#choicesTable {
+  margin-top: 25%;
+}
+
+#outcomeData {
+  margin-top: 10%;
+  text-align: center;
+}
+
+#itemsTablesContainer {
+  margin-left: -33%;
+  text-align: center;
+}
+
+#itemsTable {
+  float: left;
+}
+
+#craftingContainer {
+  float: left;
+  margin-left: 10%;
+}
+
+#craftablesTable {
+  clear: both;
+  margin-top: 5%;
+}
+
+#mMovePlayer, #mVSicon, #mMoveCPU, #mPlayer, #mCPU, #mDraw {
+  float: left;
+  width: 100px;
+  height: 100px;
+}
+
+#mWinPlayer_IMG, #mWinCPU_IMG {
+  position: relative;
+  left: 50px;
+  width: 50px;
+  height: 50px;
+}
+
+#mWinPlayer_IMG {
+  left: -20px;
+}
+
+#mWinsPlayer, #mWinsCPU, #mDraws {
+  text-align: center;
+  font-family: "Arial Black";
+}
+
+#mWinsPlayer {
+  color: #80ffaa;
+}
+
+#mDraws {
+  color: #cccc00;
+}
+
+#mWinsCPU {
+  color: #ff6666;
+}
+
+td {
+  float: left;
+  width: 100px;
+  height: 100px;
+}
+
+.tdButton {
+  height: 100px;
+  width: 100px;
+}
+
+.tdFiller {
+  height: 100px;
+  width: 100px;
+}
+
+.tdItem {
+  background-color: #666699;
+  border: solid #47476b;
+  border-radius: 5%;
+  color: white;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.tdText {
+  margin-top: 40%;
+  font-family: "Arial Black";
+}
+
+.tdImg {
+  margin-top: 20%;
+  height: 50px;
+  width: 50px;
+}
+
+#startGameButton {
+  background-color: #666699;
+  color: white;
+  width: 150px;
+  height: 60px;
+  font-size: 30pt;
+  font-family: "Arial Black";
+}
+
+#logoCont {
+  float: left;
+  width: 70%;
+  margin-left: 16%;
+  margin-bottom: 5%;
+  text-align: justify;
+}
+
+#logo {
+  width: 128px;
+  height: 128px;
+}
+
+#title {
+  font-family: "Arial Black";
+  margin-left: -20%;
+}
 
 .tooltip .tooltiptext {
-	visibility: hidden;
-	width: 120px;
-	background-color: black;
-	color: #fff;
-	text-align: center;
-	border-radius: 6px;
-	padding: 5px 0;
-
-	/* Position the tooltip */
-	position: absolute;
-	z-index: 1;
+  visibility: hidden;
+  width: 120px;
+  background-color: black;
+  color: white;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+  /* Position the tooltip */
+  position: absolute;
+  z-index: 1;
 }
+
 .tooltip:hover .tooltiptext {
-	visibility: visible;
+  visibility: visible;
 }
 
 .tooltip_Bot .tooltiptext_Bot {
-	width: 120px;
-	top: 100%;
-	left: 50%;
-	margin-left: -60px; /* Use half of the width (120/2 = 60), to center the tooltip */
+  width: 120px;
+  top: 100%;
+  left: 50%;
+  margin-left: -60px;
+  /* Use half of the width (120/2 = 60), to center the tooltip */
 }
+
 .tooltip_Right .tooltiptext_Right {
-	top: -5px;
-	left: 105%;
+  top: -5px;
+  left: 105%;
 }
+
 .tooltip_Left .tooltiptext_Left {
-	top: -5px;
-	right: 105%;
+  top: -5px;
+  right: 105%;
 }
+/*# sourceMappingURL=style.css.map */

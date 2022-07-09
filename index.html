@@ -19,13 +19,16 @@
 	<h2>Main Menu / Options</h2>
 	<table id="optionsTable"><form>
 		GameSpeed: <input type="range" id="gameSpeed-Input" value="1" min="1" max="99" onInput="this.nextElementSibling.value = this.value"></input><output>1</output><br>
-		Reverse Gametest: <input type="checkbox" id="reverseGametest-Checkbox"></input><br>
 		CPU Complexity: <select type="checkbox" id="cpuComplexity-List">
 			<option value="0">0 - Random</option>
 			<option value="1">1 - Basic</option>
 			<option value="2">2 - More advanced countering</option>
 			<option value="3" selected>3 - Full AI</option>
 		</select><br>
+		Classic GameRules: <input type="checkbox" id="classicGameRules-Checkbox"></input><br>
+		Discover All Items: <input type="checkbox" id="discoverAllItems-Checkbox"></input><br>
+		Unlock All Recipes: <input type="checkbox" id="unlockAllRecipes-Checkbox"></input><br>
+		Cheat All Items: <input type="checkbox" id="cheatAllItems-Checkbox"></input><br>
 		<br><input type="button" onClick="StartGame()" value="Start" id="startGameButton"></input><br>
 	</form></table>
 </div>

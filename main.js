@@ -3,18 +3,27 @@
 //#region  Variables & Classes
 //Game settings
 var gameSpeed_Def=1;
-var reverseGameTest_Def=true;
+var classicGameRules_Def=false;
 var cpuComplexity_Def=3;//0 to 3
 
 var gameSpeed=gameSpeed_Def;
 var updateSpeedMs=1000/60;
-var reverseGameTest=reverseGameTest_Def;
+var classicGameRules=classicGameRules_Def;
 var cpuComplexity=cpuComplexity_Def;//0 to 3
 var itemsNeededToMove=true;
 var itemAlwaysUsedOnMove=false;
 var renewableStartItem=true;
 var renewableStartItemMs=1500;
 var unlockableRecipes=true;
+var autoRemoveRecipesWhenItemNotExist=true;
+var hideUndiscoveredItems=true;
+var hideUndiscoveredStations=true;
+var hideUndiscoveredRecipes=true;
+var hideLockedRecipes=false;
+var hideLockedRecipesIngredients=false;
+var lockSelectingNotOwnedStations=true;
+var displayChanceInIngredients=true;
+var displayStationInIngredients=false;
 
 //Basic Variables
 var move=0,moveCPU=0;
@@ -22,11 +31,14 @@ var wins=0,losses=0,draws=0;
 var firstMovesCPU=new Array(3);
 var last3MovesPlayer=new Array(3);
 var last3MovesCPU=new Array(3);
+var selectedStation="";
 
 //other
 var debug=true;
 var cheatAllItems=false;
+var unlockAllRecipes=false;
 var tooltips=true;
+var itemsTableWidth=3;
 /// }
 
 
@@ -50,55 +62,65 @@ function SetupGame(){
 	$("#mVSicon").append("<img src='"+GetImg("VS")+"'/>");
 
 	RandomizeFirstCPUMoves();
+	DiscoverItem("Hand");
 	GiveStartingItems();
 	DisplayItems();
+	SelectStation("Hand");
 
 	UpdateFunc(Update);
 }
 function SetupMainMenu(){
 	if(debug)console.log("SETTING UP MAIN MENU");
 
+	if(localStorage.getItem("gameSpeed")==null){DefaultOptions();}
+
 	$("#gameSpeed-Input").val(localStorage.getItem("gameSpeed"));	$("#gameSpeed-Input").next("output").val($("#gameSpeed-Input").val());
-	//$("#reverseGametest-Checkbox").prop("checked",eval(localStorage.getItem("reverseGametest")));
 	$("#cpuComplexity-List").val(localStorage.getItem("cpuComplexity"));
+	$("#classicGameRules-Checkbox").prop("checked",eval(localStorage.getItem("classicGameRules")));
+	$("#discoverAllItems-Checkbox").prop("checked",eval(localStorage.getItem("discoverAllItems")));
+	$("#unlockAllRecipes-Checkbox").prop("checked",eval(localStorage.getItem("unlockAllRecipes")));
+	$("#cheatAllItems-Checkbox").prop("checked",eval(localStorage.getItem("cheatAllItems")));
 }
 function StartGame(){
 	localStorage.setItem("gameSpeed",$("#gameSpeed-Input").val());
-	localStorage.setItem("reverseGameTest",$("#reverseGametest-Checkbox").prop("checked"));
 	localStorage.setItem("cpuComplexity",$("#cpuComplexity-List").val());
+	localStorage.setItem("classicGameRules",$("#classicGameRules-Checkbox").prop("checked"));
+	localStorage.setItem("discoverAllItems",$("#discoverAllItems-Checkbox").prop("checked"));
+	localStorage.setItem("unlockAllRecipes",$("#unlockAllRecipes-Checkbox").prop("checked"));
+	localStorage.setItem("cheatAllItems",$("#cheatAllItems-Checkbox").prop("checked"));
 	
 	PageRedirect("game.html");
 }
 function LoadMainMenuOptions(){
-	if(debug){console.log("--- PRE:");
-	console.log(gameSpeed);
-	console.log(reverseGameTest);
-	console.log(cpuComplexity);}
-
-	gameSpeed=eval(localStorage.getItem("gameSpeed"));
-	reverseGameTest=eval(localStorage.getItem("reverseGameTest"));
-	cpuComplexity=eval(localStorage.getItem("cpuComplexity"));
-	
-	if(debug){console.log("--- POST:");
-	console.log(gameSpeed);
-	console.log(reverseGameTest);
-	console.log(cpuComplexity);
-	console.log("---");}
+	LoadOptions();
 }
 var _gettingRedirected=false;
 $(window).bind('beforeunload',function(){
 	if(_gettingRedirected){return;}
-	else{
-		localStorage.setItem("gameSpeed",gameSpeed_Def);
-		localStorage.setItem("reverseGameTest",reverseGameTest_Def);
-		localStorage.setItem("cpuComplexity",cpuComplexity_Def);
-	}
+	else{DefaultOptions();}
 	_gettingRedirected=false;
 	
 });
+function DefaultOptions(){
+	localStorage.setItem("gameSpeed",gameSpeed_Def);
+	localStorage.setItem("cpuComplexity",cpuComplexity_Def);
+	localStorage.setItem("classicGameRules",classicGameRules_Def);
+	localStorage.setItem("discoverAllItems",false);
+	localStorage.setItem("unlockAllRecipes",false);
+	localStorage.setItem("cheatAllItems",false);
+}
+function LoadOptions(){
+	gameSpeed=eval(localStorage.getItem("gameSpeed"));
+	cpuComplexity=eval(localStorage.getItem("cpuComplexity"));
+	classicGameRules=eval(localStorage.getItem("classicGameRules"));
+	discoverAllItems=eval(localStorage.getItem("discoverAllItems"));
+	unlockAllRecipes=eval(localStorage.getItem("unlockAllRecipes"));
+	cheatAllItems=eval(localStorage.getItem("cheatAllItems"));
+}
 
 function Update(){
 	if(unlockableRecipes)UnlockableRecipes();
+	if(autoRemoveRecipesWhenItemNotExist)AutoRemoveRecipesWhenItemNotExist();
 }
 
 function UseMove(m){
@@ -199,7 +221,7 @@ function SetLastCPUMoves(){
 
 
 //#region  Other
-function Randomize(min,max){return Math.floor(Math.random()*(max-min+1))+min;}
+function Randomize(min=1,max=100){return Math.floor(Math.random()*(max-min+1))+min;}
 function GetPageName(){return window.location.pathname.split("/").pop();}
 function PageRedirect(path){_gettingRedirected=true;window.location.href=(path);}
 const delay = async (ms = 1000) => new Promise(resolve => setTimeout(resolve, ms));
@@ -214,6 +236,20 @@ function TranslateMove(m){	let moveName="";
 		case 3: moveName="Scissors";break;
 		default: moveName="??";break;
 	}return moveName;
+}
+function GetColorBasedOnChance(i){	let color="green";
+	if(i<75&&i>=50)color="yellow";
+	if(i<50&&i>=25)color="orange";
+	if(i<25)color="red";
+	return color;
+}
+function SpecialNumbers(n){	let sign=n;
+	if(n=="-4"){sign="?";}
+	if(n=="-5"){sign="∞";}
+	return sign;
+}
+function _isSpecialNumber(n){
+	return (n=="-5");
 }
 function AddTooltip(element,text,dir=1){
 	if(tooltips){

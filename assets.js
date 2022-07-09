@@ -63,4 +63,8 @@ function SetupFiles(){		files=new Array(0);
 	NewItemImage("MetalFrags","MetalFrags");
 	NewItemImage("Campfire","Campfire");
 	NewItemImage("Compressor","Compressor");
+	NewItemImage("Hand","Hand");
+	NewItemImage("Axe","Axe");
+	NewItemImage("Pickaxe","Pickaxe");
+	NewItemImage("Metal Axe","MetalAxe");
 }

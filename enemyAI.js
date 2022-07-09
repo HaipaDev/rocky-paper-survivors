@@ -55,7 +55,7 @@ function GetCPUMove(){
 }
 function GetCPUMoveBasedOnLast(){	let mv=0;
 	let chanceRock=33;let chancePaper=33;//Scissors is the rest from these to a 100
-	let rnd=Randomize(1,100);
+	let rnd=Randomize();
 	
 	////Set the chances
 	if(cpuComplexity>=1){
