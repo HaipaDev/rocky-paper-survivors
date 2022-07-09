@@ -1,5 +1,10 @@
-function GiveItem(str,c=1){items.find(x=>x.name==str).count+=c;}
-function GiveItemByID(i,c=1){items[i].count+=c;}
+function GiveItem(str,c=1){let it=items.find(x=>x.name==str);if(it!=null){it.count+=c;console.log("Giving item: "+str+" x"+c+" time");}else{console.error("CANT GIVE, NO ITEM BY NAME: "+str);}}
+function UseItem(str,c=1){let it=items.find(x=>x.name==str);
+	if(it!=null){
+	if(it.count>=c){it.count-=c;console.log("Using item: "+str+" x"+c+" time");}
+	else{console.error("TRYING TO USE MORE ITEMS THAN THERE ARE");}
+	}else{console.error("CANT USE, NO ITEM BY NAME: "+str);}
+}
 async function RenewableItem(item="Paper",count=1,ms=1000){
 	await delay(ms);
 	GiveItem(item,count);
@@ -55,7 +60,7 @@ function GiveStartingItems(){
 	if(renewablePaper)RenewableItem("Paper",1,renewablePaperMs);
 }
 function CraftItem(i){if(items[i]!=null){
-	console.log(recipes);
+	//console.log(recipes);
 	let recipe=recipes.find(x=>x.name==items[i].name);
 	if(recipe!=null){
 		if(recipe.item1!=""&&recipe.item2!=""&&recipe.item3!=""){//3 ingredients
@@ -75,7 +80,7 @@ function CraftItem(i){if(items[i]!=null){
 					item3.count-=recipe.item3Cost;
 					if(station!=""){station.count-=recipe.stUses;}
 					itemResult.count+=recipe.count;
-					console.log("Item crafted: "+itemResult.name+" x"+recipe.count+" times for "+recipe.item1Cost+"x "+item1.name);
+					console.log("Item crafted: "+itemResult.name+" x"+recipe.count+" times");
 				}else{console.error("NO ITEM FOUND FOR: "+recipe.name);}
 			}
 			}
@@ -94,7 +99,7 @@ function CraftItem(i){if(items[i]!=null){
 					item2.count-=recipe.item2Cost;
 					if(station!=""){station.count-=recipe.stUses;}
 					itemResult.count+=recipe.count;
-					console.log("Item crafted: "+itemResult.name+" x"+recipe.count+" times for "+recipe.item1Cost+"x "+item1.name);
+					console.log("Item crafted: "+itemResult.name+" x"+recipe.count+" times");
 				}else{console.error("NO ITEM FOUND FOR: "+recipe.name);}
 			}
 			}
@@ -114,14 +119,15 @@ function CraftItem(i){if(items[i]!=null){
 				}else{console.error("NO ITEM FOUND FOR: "+recipe.name);}
 			}
 			}
-		}else{//no ingredients, pure station
+		}
+		else{//no ingredients, pure station
 			let itemResult=items.find(x=>x.name==recipe.name);
 			let station="";if(recipe.station!="")station=items.find(x=>x.name==recipe.station);
 			if(station!=""&&station.count>recipe.stUses){
 				if(itemResult!=null){
 					if(station!=""){station.count-=recipe.stUses;}
 					itemResult.count+=recipe.count;
-					console.log("Item crafted: "+itemResult.name+" x"+recipe.count+" times for "+item1Cost+"x "+item1.name);
+					console.log("Item crafted: "+itemResult.name+" x"+recipe.count+" times for ");
 				}else{console.error("NO ITEM FOUND FOR: "+recipe.name);}
 			}
 		}
