@@ -1,0 +1,97 @@
+body{
+	background-color:#1f1f2e;
+	color:white;
+}
+#mainCont{
+	float:left;
+	height:50%;
+	margin-left:40%;
+}
+#choicesTable{
+	margin-top:25%;
+}
+#outcomeData{
+	margin-top:10%;
+	text-align:center;
+}
+td{
+	float:left;
+	width:100px;
+	height:100px;
+}
+.tdButton{
+	height:100px;
+	width:100px;
+}
+.tdFiller{
+	height:100px;
+	width:100px;
+}
+#mMovePlayer,#mVSicon,#mMoveCPU,#mPlayer,#mCPU,#mDraw{
+	float:left;
+	width:100px;
+	height:100px;
+}
+#mWinsLosses{}
+#mWinPlayer_IMG,#mWinCPU_IMG{
+	position:relative;
+	left:50px;
+	width:50px;
+	height:50px;
+}
+#mWinPlayer_IMG{
+	left:-20px;
+}
+#mWinsPlayer,#mWinsCPU,#mDraws{
+	text-align:center;
+	font-family:"Arial Black";
+}
+#mWinsPlayer{color:#80ffaa;}
+#mDraws{color:#cccc00;}
+#mWinsCPU{color:#ff6666;}
+#logoCont{
+	float:left;
+	width:70%;
+	margin-left:30%;
+	margin-bottom:20%;
+	text-align:justify;
+}
+#logo{
+	display:flex;
+	width:128px;
+	height:128px;
+}
+#title{
+	font-family:"Arial Black";
+	margin-left:-20%;
+}
+
+a{text-decoration:none;color:#0088cc;}
+a:hover{color:#1ab2ff;}
+button{
+	background-color:#666699;
+	border: solid #47476b;
+	border-radius: 5%;
+	color: white;
+	text-align: center;
+	text-decoration: none;
+	display: inline-block;
+}
+.tdItem{
+	background-color:#666699;
+	border: solid #47476b;
+	border-radius: 5%;
+	color: white;
+	text-align: center;
+	text-decoration: none;
+	display: inline-block;
+}
+.tdText{
+	margin-top:40%;
+	font-family:"Arial Black";
+}
+.tdImg{
+	margin-top:20%;
+	height:50px;
+	width:50px;
+}

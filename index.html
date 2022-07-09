@@ -1,0 +1,38 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<title>Rock Paper Survivor - HyperGamesDev</title>
+<link rel="icon" href="src/img/icon.png">
+<link rel="stylesheet" href="style.css">
+<meta charset="utf-8">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="script.js"></script>
+</head>
+<body>
+<div id="mainCont">
+	<div id="logoCont">
+		<img src="src/img/icon.png" id="logo"></img><br>
+		<h3 id="title">Rock Paper Survivor -<br>
+		<a href="https://hypergamesdev.github.io" target="_blank">&nbsp;&nbsp;by HyperGamesDev</a></h3><br>
+	</div><br>
+	<table id="choicesTable"><tr>
+		<td id="choice-r"><button class="tdButton" id="move1">Rock</button></td>
+		<td id="choice-p"><button class="tdButton" id="move2">Paper</button></td>
+		<td id="choice-s"><button class="tdButton" id="move3">Scissors</button></td>
+	</tr></table>
+	<div id="outcomeData">
+		<span id="movePlayer"></span><br>
+		<span id="moveCPU"></span><br><br>
+		<span id="winConditions"></span><br><br>
+		<span id="winsLosses"></span><br>
+	</div>
+	<!--<div class="classicDisplayItems">
+		<div><span id="items"></span></div>
+	</div>!-->
+	<table id="itemsTable"><!--<tr id="itemRow1">
+		<td class="tdItem" id="item1"><p class="tdText">Rock</p></td>
+	</tr>!--></table>
+</div>
+</body>
+</html>
+
