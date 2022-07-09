@@ -1,19 +1,18 @@
+//https://hypergamesdev.github.io
 //https://api.jquery.com
 
 //#region  Variables & Classes
 //Game settings
 var gameSpeed_Def=1;
-var classicGameRules_Def=false;
 var cpuComplexity_Def=3;//0 to 3
 
 var gameSpeed=gameSpeed_Def;
 var updateSpeedMs=1000/60;
-var classicGameRules=classicGameRules_Def;
 var cpuComplexity=cpuComplexity_Def;//0 to 3
 var itemsNeededToMove=true;
 var itemAlwaysUsedOnMove=false;
-var renewableStartItem=true;
-var renewableStartItemMs=1500;
+var renewableStartItem=false;
+var renewableStartItemS=1.5;
 var unlockableRecipes=true;
 var autoRemoveRecipesWhenItemNotExist=true;
 var hideUndiscoveredItems=true;
@@ -23,7 +22,8 @@ var hideLockedRecipes=false;
 var hideLockedRecipesIngredients=false;
 var lockSelectingNotOwnedStations=true;
 var displayChanceInIngredients=true;
-var displayStationInIngredients=false;
+var displayStationInIngredients=true;
+var displayStationNoUseInIngredients=false;
 
 //Basic Variables
 var move=0,moveCPU=0;
@@ -76,7 +76,6 @@ function SetupMainMenu(){
 
 	$("#gameSpeed-Input").val(localStorage.getItem("gameSpeed"));	$("#gameSpeed-Input").next("output").val($("#gameSpeed-Input").val());
 	$("#cpuComplexity-List").val(localStorage.getItem("cpuComplexity"));
-	$("#classicGameRules-Checkbox").prop("checked",eval(localStorage.getItem("classicGameRules")));
 	$("#discoverAllItems-Checkbox").prop("checked",eval(localStorage.getItem("discoverAllItems")));
 	$("#unlockAllRecipes-Checkbox").prop("checked",eval(localStorage.getItem("unlockAllRecipes")));
 	$("#cheatAllItems-Checkbox").prop("checked",eval(localStorage.getItem("cheatAllItems")));
@@ -84,7 +83,6 @@ function SetupMainMenu(){
 function StartGame(){
 	localStorage.setItem("gameSpeed",$("#gameSpeed-Input").val());
 	localStorage.setItem("cpuComplexity",$("#cpuComplexity-List").val());
-	localStorage.setItem("classicGameRules",$("#classicGameRules-Checkbox").prop("checked"));
 	localStorage.setItem("discoverAllItems",$("#discoverAllItems-Checkbox").prop("checked"));
 	localStorage.setItem("unlockAllRecipes",$("#unlockAllRecipes-Checkbox").prop("checked"));
 	localStorage.setItem("cheatAllItems",$("#cheatAllItems-Checkbox").prop("checked"));
@@ -104,7 +102,6 @@ $(window).bind('beforeunload',function(){
 function DefaultOptions(){
 	localStorage.setItem("gameSpeed",gameSpeed_Def);
 	localStorage.setItem("cpuComplexity",cpuComplexity_Def);
-	localStorage.setItem("classicGameRules",classicGameRules_Def);
 	localStorage.setItem("discoverAllItems",false);
 	localStorage.setItem("unlockAllRecipes",false);
 	localStorage.setItem("cheatAllItems",false);
@@ -112,7 +109,6 @@ function DefaultOptions(){
 function LoadOptions(){
 	gameSpeed=eval(localStorage.getItem("gameSpeed"));
 	cpuComplexity=eval(localStorage.getItem("cpuComplexity"));
-	classicGameRules=eval(localStorage.getItem("classicGameRules"));
 	discoverAllItems=eval(localStorage.getItem("discoverAllItems"));
 	unlockAllRecipes=eval(localStorage.getItem("unlockAllRecipes"));
 	cheatAllItems=eval(localStorage.getItem("cheatAllItems"));
@@ -121,6 +117,7 @@ function LoadOptions(){
 function Update(){
 	if(unlockableRecipes)UnlockableRecipes();
 	if(autoRemoveRecipesWhenItemNotExist)AutoRemoveRecipesWhenItemNotExist();
+	if(!renewableStartItem)StopCor("RenewableItem");
 }
 
 function UseMove(m){
@@ -251,20 +248,20 @@ function SpecialNumbers(n){	let sign=n;
 function _isSpecialNumber(n){
 	return (n=="-5");
 }
-function AddTooltip(element,text,dir=1){
+function AddTooltip(element,text,dir=0){
 	if(tooltips){
 		//Setting direction doesnt even work
-		let _dir="";
+		let _dir="_Bot";
 		switch(dir){
-			case 1:_dir="_bot";break;
-			case 2:_dir="_left";break;
-			case 3:_dir="_right";break;
-			default:_dir="";break;
+			case 1:_dir="_Top";break;
+			case 2:_dir="_Left";break;
+			case 3:_dir="_Right";break;
+			default:_dir="_Bot";break;
 		}
 		//if(debug)console.log("Adding tooltip for: "+element+" with text: "+text)
 		$(element).addClass("tooltip");
-		if(_dir!="")$(element).addClass("tooltip"+_dir);
-		$(element).append("<span class='tooltiptext'>"+text+"</span>").addClass("tooltiptext"+_dir);
+		$(element).addClass("tooltip"+_dir);
+		$(element).append("<br><span class='tooltiptext'>"+text+"</span>").addClass("tooltiptext"+_dir);
 	}
 }
 /// }

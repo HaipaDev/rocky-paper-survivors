@@ -9,8 +9,10 @@ $bigFont:"Arial Black";
 
 $button-bgColor:#666699;
 $selectedStation-bgColor:#7979b4;
-$unownedStation-bgColor:#47476b;
 $button-borderColor:#47476b;
+$disabledButton-bgColor:#47476b;
+$unownedStation-bgColor:$disabledButton-bgColor;
+$uncraftableItem-bgColor:$disabledButton-bgColor;
 $button-textColor:$textColor;
 $tooltip-bgColor:black;
 $tooltip-textColor:$textColor;
@@ -40,7 +42,8 @@ button,input[type=button]{
 	display: inline-block;
 }
 .selectedStation{background-color:$selectedStation-bgColor;}
-.unownedStation{background-color:$unownedStation-bgColor;}
+.unownedStation{background-color:$disabledButton-bgColor;}
+.uncraftableItem{background-color:$disabledButton-bgColor;}
 button:hover,input[type=button]:hover,a:hover{cursor:pointer;}
 
 
@@ -160,6 +163,11 @@ td{
 }
 
 //Tooltips
+/*.tooltip {
+	position: relative;
+	display: inline-block;
+	border-bottom: 1px dotted black;
+}*/
 .tooltip .tooltiptext {
 	visibility: hidden;
 	width: 120px;
@@ -168,18 +176,23 @@ td{
 	text-align: center;
 	border-radius: 6px;
 	padding: 5px 0;
+	z-index: 1;
 
 	/* Position the tooltip */
 	position: absolute;
-	z-index: 1;
 }
+
 .tooltip:hover .tooltiptext {
 	visibility: visible;
 }
 
 .tooltip_Bot .tooltiptext_Bot {
-	width: 120px;
 	top: 100%;
+	left: 50%;
+	margin-left: -60px; /* Use half of the width (120/2 = 60), to center the tooltip */
+}
+.tooltip_Top .tooltiptext_Top {
+	bottom: 100%;
 	left: 50%;
 	margin-left: -60px; /* Use half of the width (120/2 = 60), to center the tooltip */
 }

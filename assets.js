@@ -1,3 +1,4 @@
+/// Files & Images
 var filesPath="src/";
 var imgSubPath="img/";
 var itemsSubPath="items/";
@@ -60,11 +61,48 @@ function SetupFiles(){		files=new Array(0);
 	NewItemImage("Paper","Paper");
 	NewItemImage("Scissors","Scissors");
 	NewItemImage("Wood","Wood");
-	NewItemImage("MetalFrags","MetalFrags");
+	NewItemImage("Metal Scrap","MetalScrap");
 	NewItemImage("Campfire","Campfire");
 	NewItemImage("Compressor","Compressor");
 	NewItemImage("Hand","Hand");
 	NewItemImage("Axe","Axe");
 	NewItemImage("Pickaxe","Pickaxe");
 	NewItemImage("Metal Axe","MetalAxe");
+	NewItemImage("Metal Pickaxe","MetalPickaxe");
+	NewItemImage("Charcoal","Charcoal");
+}
+
+/// IEnumerators
+var coroutines=new Array(0);
+
+class Coroutine{
+	constructor(name,callback,time,realtime){
+		this.name=name;
+		this.callback=callback;
+		this.time=time;
+		this.realtime=realtime;
+		this.on=true;
+	}
+	async Call(loop=false){
+		if(!this.realtime){await delaywGameSpeed(1000*this.time);}
+		else{await delay(1000*this.time);}
+		if(this.on){
+			console.log("CALLED "+this.name);
+			this.callback();
+			if(loop)this.Call(loop);
+		}
+	}
+	Stop(){if(this.on)this.on=false;}
+}
+function NewCor(name,callback,time,realtime=false,call=true,loop=false){
+	coroutines.push(new Coroutine(name,callback,time,realtime));
+	if(call)GetCor(name).Call(loop);
+	return GetCor(name);
+}
+function GetCor(name){return coroutines.find(x=>x.name==name);}
+function StopCor(name){let cor=coroutines.find(x=>x.name==name);if(cor!=null)cor.Stop();}
+//if cor does not exist autocreate one into the array of them, if off remove?
+
+Array.prototype.any = function(func) {
+	return this.some(func || function(x) { return x });
 }
