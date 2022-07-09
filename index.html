@@ -6,7 +6,9 @@
 <link rel="stylesheet" href="style.css">
 <meta charset="utf-8">
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="script.js"></script>
+<script src="main.js"></script>
+<script src="enemyAI.js"></script>
+<script src="items.js"></script>
 </head>
 <body>
 <div id="mainCont">
@@ -26,12 +28,9 @@
 		<span id="winConditions"></span><br><br>
 		<span id="winsLosses"></span><br>
 	</div>
-	<!--<div class="classicDisplayItems">
-		<div><span id="items"></span></div>
-	</div>!-->
-	<table id="itemsTable"><!--<tr id="itemRow1">
-		<td class="tdItem" id="item1"><p class="tdText">Rock</p></td>
-	</tr>!--></table>
+	<table id="itemsTable"><tbody></table>
+	<table id="stationsTable"></table>
+	<table id="craftablesTable"></table>
 </div>
 </body>
 </html>
