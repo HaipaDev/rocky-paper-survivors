@@ -21,6 +21,10 @@ h1, h2, h3 {
   font-family: "Arial Black";
 }
 
+.coloredDownText {
+  color: #5B587F;
+}
+
 button, input[type=button] {
   background-color: #666699;
   border: solid #47476b;
@@ -31,20 +35,40 @@ button, input[type=button] {
   display: inline-block;
 }
 
-.selectedStation {
+button:hover, input[type=button]:hover, a:hover {
+  cursor: pointer;
+}
+
+button:active, input[type=button]:active, a:active {
   background-color: #7979b4;
 }
 
+button:hover.uncraftableItem, input[type=button]:hover.uncraftableItem, a:hover.uncraftableItem {
+  cursor: not-allowed !important;
+}
+
+button:hover.unownedStation, input[type=button]:hover.unownedStation, a:hover.unownedStation {
+  cursor: not-allowed !important;
+}
+
+.selectedStation {
+  background-color: #7979b4 !important;
+  cursor: default !important;
+}
+
+.unownedItem {
+  background-color: #5B587F !important;
+  cursor: not-allowed !important;
+}
+
 .unownedStation {
-  background-color: #47476b;
+  background-color: #5B587F !important;
+  cursor: not-allowed !important;
 }
 
 .uncraftableItem {
-  background-color: #47476b;
-}
-
-button:hover, input[type=button]:hover, a:hover {
-  cursor: pointer;
+  background-color: #5B587F !important;
+  cursor: not-allowed !important;
 }
 
 #mainCont {
@@ -130,6 +154,7 @@ td {
 .tdButton {
   height: 100px;
   width: 100px;
+  margin-top: -2px;
 }
 
 .tdFiller {
@@ -176,13 +201,14 @@ td {
 }
 
 #logo {
+  margin-left: -3%;
   width: 128px;
   height: 128px;
 }
 
 #title {
   font-family: "Arial Black";
-  margin-left: -20%;
+  margin-left: -12%;
 }
 
 /*.tooltip {

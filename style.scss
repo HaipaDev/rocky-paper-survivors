@@ -8,12 +8,15 @@ $defFont2:"Open Sans";
 $bigFont:"Arial Black";
 
 $button-bgColor:#666699;
-$selectedStation-bgColor:#7979b4;
 $button-borderColor:#47476b;
-$disabledButton-bgColor:#47476b;
+$selected-bgColor:#7979b4;
+$disabledButton-bgColor:#5B587F;
+$button-textColor:$textColor;
+$unownedItem-bgColor:$disabledButton-bgColor;
 $unownedStation-bgColor:$disabledButton-bgColor;
 $uncraftableItem-bgColor:$disabledButton-bgColor;
-$button-textColor:$textColor;
+$selectedStation-bgColor:$selected-bgColor;
+$pressedButton-bgColor:$selected-bgColor;
 $tooltip-bgColor:black;
 $tooltip-textColor:$textColor;
 
@@ -31,6 +34,7 @@ body{
 a{text-decoration:none;color:$link-color;}
 a:hover{color:$linkHover-color;}
 h1,h2,h3{font-family:$bigFont;}
+.coloredDownText{color:$disabledButton-bgColor;}
 
 button,input[type=button]{
 	background-color:$button-bgColor;
@@ -41,10 +45,15 @@ button,input[type=button]{
 	text-decoration: none;
 	display: inline-block;
 }
-.selectedStation{background-color:$selectedStation-bgColor;}
-.unownedStation{background-color:$disabledButton-bgColor;}
-.uncraftableItem{background-color:$disabledButton-bgColor;}
 button:hover,input[type=button]:hover,a:hover{cursor:pointer;}
+button:active,input[type=button]:active,a:active{background-color:$pressedButton-bgColor;}
+button:hover.uncraftableItem,input[type=button]:hover.uncraftableItem,a:hover.uncraftableItem{cursor:not-allowed !important;}
+button:hover.unownedStation,input[type=button]:hover.unownedStation,a:hover.unownedStation{cursor:not-allowed !important;}
+
+.selectedStation{background-color:$selectedStation-bgColor !important; cursor:default !important;}
+.unownedItem{background-color:$unownedItem-bgColor !important; cursor:not-allowed !important;}
+.unownedStation{background-color:$unownedStation-bgColor !important; cursor:not-allowed !important;}
+.uncraftableItem{background-color:$uncraftableItem-bgColor !important; cursor:not-allowed !important;}
 
 
 #mainCont{
@@ -112,6 +121,7 @@ td{
 .tdButton{
 	height:100px;
 	width:100px;
+	margin-top:-2px;
 }
 .tdFiller{
 	height:100px;
@@ -154,12 +164,13 @@ td{
 	text-align:justify;
 }
 #logo{
+	margin-left:-3%;
 	width:128px;
 	height:128px;
 }
 #title{
 	font-family:$bigFont;
-	margin-left:-20%;
+	margin-left:-12%;
 }
 
 //Tooltips

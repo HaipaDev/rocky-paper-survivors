@@ -3,14 +3,21 @@
 
 //#region  Variables & Classes
 //Game settings
-var gameSpeed_Def=1;
-var cpuComplexity_Def=3;//0 to 3
+const gameSpeed_Def=1;
+const craftMult_def=1;
+const dropMult_def=2;
+const startItemCount_Def=3;
+const cpuComplexity_Def=3;//0 to 3
+const _tickrate=1000/60;
 
 var gameSpeed=gameSpeed_Def;
-var updateSpeedMs=1000/60;
+var craftMult=craftMult_def;
+var startItemCount=startItemCount_Def;
 var cpuComplexity=cpuComplexity_Def;//0 to 3
 var itemsNeededToMove=true;
 var itemAlwaysUsedOnMove=false;
+var dropMult=dropMult_def;
+var returnItemOnWin=true;
 var renewableStartItem=false;
 var renewableStartItemS=1.5;
 var unlockableRecipes=true;
@@ -72,16 +79,23 @@ function SetupGame(){
 function SetupMainMenu(){
 	if(debug)console.log("SETTING UP MAIN MENU");
 
-	if(localStorage.getItem("gameSpeed")==null){DefaultOptions();}
+	//if(localStorage.getItem("gameSpeed")==null){DefaultOptions();}
+	if(localStorage.getItem("craftMult")==null){DefaultOptions();}
 
-	$("#gameSpeed-Input").val(localStorage.getItem("gameSpeed"));	$("#gameSpeed-Input").next("output").val($("#gameSpeed-Input").val());
+	//$("#gameSpeed-Input").val(localStorage.getItem("gameSpeed"));	$("#gameSpeed-Input").next("output").val($("#gameSpeed-Input").val());
+	$("#craftMult-Input").val(localStorage.getItem("craftMult"));	$("#craftMult-Input").next("output").val($("#craftMult-Input").val());
+	$("#dropMult-Input").val(localStorage.getItem("dropMult"));	$("#dropMult-Input").next("output").val($("#dropMult-Input").val());
+	$("#startItemCount-Input").val(localStorage.getItem("startItemCount"));
 	$("#cpuComplexity-List").val(localStorage.getItem("cpuComplexity"));
 	$("#discoverAllItems-Checkbox").prop("checked",eval(localStorage.getItem("discoverAllItems")));
 	$("#unlockAllRecipes-Checkbox").prop("checked",eval(localStorage.getItem("unlockAllRecipes")));
 	$("#cheatAllItems-Checkbox").prop("checked",eval(localStorage.getItem("cheatAllItems")));
 }
 function StartGame(){
-	localStorage.setItem("gameSpeed",$("#gameSpeed-Input").val());
+	//localStorage.setItem("gameSpeed",$("#gameSpeed-Input").val());
+	localStorage.setItem("craftMult",$("#craftMult-Input").val());
+	localStorage.setItem("dropMult",$("#dropMult-Input").val());
+	localStorage.setItem("startItemCount",$("#startItemCount-Input").val());
 	localStorage.setItem("cpuComplexity",$("#cpuComplexity-List").val());
 	localStorage.setItem("discoverAllItems",$("#discoverAllItems-Checkbox").prop("checked"));
 	localStorage.setItem("unlockAllRecipes",$("#unlockAllRecipes-Checkbox").prop("checked"));
@@ -100,14 +114,20 @@ $(window).bind('beforeunload',function(){
 	
 });
 function DefaultOptions(){
-	localStorage.setItem("gameSpeed",gameSpeed_Def);
+	//localStorage.setItem("gameSpeed",gameSpeed_Def);
+	localStorage.setItem("craftMult",craftMult_Def);
+	localStorage.setItem("dropMult",dropMult_Def);
+	localStorage.setItem("startItemCount",startItemCount_Def);
 	localStorage.setItem("cpuComplexity",cpuComplexity_Def);
 	localStorage.setItem("discoverAllItems",false);
 	localStorage.setItem("unlockAllRecipes",false);
 	localStorage.setItem("cheatAllItems",false);
 }
 function LoadOptions(){
-	gameSpeed=eval(localStorage.getItem("gameSpeed"));
+	//gameSpeed=eval(localStorage.getItem("gameSpeed"));
+	craftMult=eval(localStorage.getItem("craftMult"));
+	dropMult=eval(localStorage.getItem("dropMult"));
+	startItemCount=eval(localStorage.getItem("startItemCount"));
 	cpuComplexity=eval(localStorage.getItem("cpuComplexity"));
 	discoverAllItems=eval(localStorage.getItem("discoverAllItems"));
 	unlockAllRecipes=eval(localStorage.getItem("unlockAllRecipes"));
@@ -223,7 +243,7 @@ function GetPageName(){return window.location.pathname.split("/").pop();}
 function PageRedirect(path){_gettingRedirected=true;window.location.href=(path);}
 const delay = async (ms = 1000) => new Promise(resolve => setTimeout(resolve, ms));
 const delaywGameSpeed = async (ms = 1000) => new Promise(resolve => setTimeout(resolve, ms/gameSpeed));
-async function UpdateFunc(callback){await delay(updateSpeedMs);callback();UpdateFunc(callback);}
+async function UpdateFunc(callback){await delay(_tickrate);callback();UpdateFunc(callback);}
 async function RepeatDelayFunc(callback,ms){await delaywGameSpeed(ms);callback();RepeatDelayFunc(callback);}
 
 function TranslateMove(m){	let moveName="";
@@ -246,7 +266,7 @@ function SpecialNumbers(n){	let sign=n;
 	return sign;
 }
 function _isSpecialNumber(n){
-	return (n=="-5");
+	return (n=="-4"||n=="-5");
 }
 function AddTooltip(element,text,dir=0){
 	if(tooltips){

@@ -1,25 +1,28 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-<title>Rock Paper Survivor - HyperGamesDev</title>
-<link rel="icon" href="src/img/icon.png">
+<title>Rocky Paper Survivors - HyperGamesDev</title>
+<link rel="icon" href="src/img/iconV2.png">
 <link rel="stylesheet" href="style.css">
 <meta charset="utf-8">
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="main.js"></script>
+<script src="main.js" defer></script>
 <script src="assets.js"></script>
 </head>
 <body>
 <div id="mainMenuCont">
 	<div id="logoCont">
-		<img src="src/img/icon.png" id="logo"></img><br>
-		<h3 id="title">Rock Paper Survivor -<br>
+		<img src="src/img/iconV2.png" id="logo"></img><br>
+		<h3 id="title">Rocky Paper Survivors -<br>
 		<a href="https://hypergamesdev.github.io" target="_blank">&nbsp;&nbsp;by HyperGamesDev</a></h3><br>
 	</div><br>
 	<h2>Main Menu / Options</h2>
 	<table id="optionsTable"><form>
-		GameSpeed: <input type="range" id="gameSpeed-Input" value="1" min="1" max="99" onInput="this.nextElementSibling.value = this.value"></input><output>1</output><br>
-		CPU Complexity: <select type="checkbox" id="cpuComplexity-List">
+		<!--GameSpeed: <input type="range" id="gameSpeed-Input" value="1" min="1" max="99" onInput="this.nextElementSibling.value = this.value"></input><output>1</output><br>!-->
+		Craft Multiplier <span class="coloredDownText">[1]</span>: <input type="range" id="craftMult-Input" value="1" min="1" max="10" onInput="this.nextElementSibling.value = this.value"></input><output>1</output><br>
+		Drop Multiplier <span class="coloredDownText">[2]</span>: <input type="range" id="dropMult-Input" value="2" min="1" max="10" onInput="this.nextElementSibling.value = this.value"></input><output>2</output><br>
+		Start Item Count <span class="coloredDownText">[3]</span>: <input type="number" id="startItemCount-Input" value="3" min="1" max="999"></input><br>
+		CPU Complexity <span class="coloredDownText">[3]</span>: <select type="checkbox" id="cpuComplexity-List">
 			<option value="0">0 - Random</option>
 			<option value="1">1 - Basic</option>
 			<option value="2">2 - More advanced countering</option>

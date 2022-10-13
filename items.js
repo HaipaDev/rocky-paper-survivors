@@ -3,6 +3,9 @@ class Item{
 		this.name=name;
 		this.count=count;
 		this.station=station;
+		/*this.gotCount=gotCount;
+		this.craftedCount=craftedCount;
+		this.usedCount=usedCount;*/
 	}
 }
 class Recipe{
@@ -40,14 +43,14 @@ var discoveredRecipes;
 function GetItem(str){let it=new Item("",0);if(items.find(x=>x.name==str)!=null)it=items.find(x=>x.name==str);return it;}
 function GetItemIDFromName(str){let id=0;id=items.findIndex(x=>x.name==str);return id;}
 function ItemExists(str){return GetItem(str).name!="";}
-function GiveItem(str,c=1){
+function GiveItem(str,c=1,ignoreStats=false){
 	if(ItemExists(str)){let it=GetItem(str);
 		if(it.count!=-5){it.count+=c;console.log("%cGiving item: "+str+" x"+SpecialNumbers(c),"color: #327212");DiscoverItem(it.name);UpdateItems();}
 		else{console.warn("CANT GIVE, ITEM IS INFINITE: "+str);}
 	}else{console.warn("CANT GIVE, NO ITEM BY NAME: "+str);}
 }
-function GiveItemID(id,c=1){let it=items[id];if(it!==null){it.count+=c;console.log("%cGiving item(ID: "+id+"): "+items[id].name+" x"+SpecialNumbers(c),"color: #327212");DiscoverItem(items[id].name);UpdateItems();}else{console.warn("CANT GIVE, NO ITEM BY ID: "+id);}}
-function UseItem(str,c=1){
+function GiveItemID(id,c=1,ignoreStats=false){let it=items[id];if(it!==null){it.count+=c;console.log("%cGiving item(ID: "+id+"): "+items[id].name+" x"+SpecialNumbers(c),"color: #327212");DiscoverItem(items[id].name);UpdateItems();}else{console.warn("CANT GIVE, NO ITEM BY ID: "+id);}}
+function UseItem(str,c=1,ignoreStats=false){
 	if(ItemExists(str)){let it=GetItem(str);
 		if(it.count>=c){it.count-=c;console.log("%cUsing item: "+str+" x"+c+" times","color: #810404");UpdateItems();}
 		else{console.warn("TRYING TO USE MORE("+c+") ITEMS THAN THERE ARE("+SpecialNumbers(it.count)+") FOR: "+str);}
@@ -104,32 +107,42 @@ function SetupItems(){	items=new Array(0);discoveredItems=new Array(0);
 function DisplayItems(){
 	//if(debug){console.log("%cItems: ","color: #006666");console.log(items);}
 	let itemsNSList=items.filter(x=>!x.station);
-	let discoveredItemsList=itemsNSList;if(hideUndiscoveredItems)discoveredItemsList=discoveredItemsList.filter(x=>discoveredItems.includes(x.name));
+	let displayedItemsList=itemsNSList;if(hideUndiscoveredItems)displayedItemsList=displayedItemsList.filter(x=>discoveredItems.includes(x.name));
 	let stationsList=new Array(0);stationsList.push(new Item("Hand","",true));stationsList=stationsList.concat(items.filter(x=>x.station));
-	let discoveredStationsList=stationsList;if(hideUndiscoveredStations)discoveredStationsList=discoveredStationsList.filter(x=>discoveredItems.includes(x.name));
+	let displayedStationsList=stationsList;if(hideUndiscoveredStations)displayedStationsList=displayedStationsList.filter(x=>discoveredItems.includes(x.name));
 	
-	for(let i=0;i<discoveredItemsList.length;i++){
-		$("#item"+i).html("<img src='"+GetImg(discoveredItemsList[i].name)+"' alt="+discoveredItemsList[i].name+" class='tdImg'>"+"<br>\
-			<span class='tdText' id='itemCount"+GetItemIDFromName(discoveredItemsList[i].name)+"'>"+discoveredItemsList[i].count+"</span>");
-		AddTooltip("#item"+i,discoveredItemsList[i].name,3);
+	for(let i=0;i<displayedItemsList.length;i++){
+		$("#item"+i).html("<img src='"+GetImg(displayedItemsList[i].name)+"' alt="+displayedItemsList[i].name+" class='tdImg'>"+"<br>\
+			<span class='tdText' id='itemCount"+GetItemIDFromName(displayedItemsList[i].name)+"'>"+displayedItemsList[i].count+"</span>");
+		//if(displayedItemsList[i].count<=0)$("#item"+i).addClass("grayOutItem");
+		AddTooltip("#item"+i,displayedItemsList[i].name,3);
 	}
-	for(let i=0;i<discoveredStationsList.length;i++){
+	for(let i=0;i<displayedStationsList.length;i++){
 		$("#station"+i).html("<button class='tdButton' id='"+('station'+i)+"_bt'>\
-			<img src='"+GetImg(discoveredStationsList[i].name)+"' alt="+discoveredStationsList[i].name+" class='tdImg'>"+"<br>\
-				<span class='tdText' id='itemCount"+GetItemIDFromName(discoveredStationsList[i].name)+"'>"+SpecialNumbers(discoveredStationsList[i].count)+"</span></button>");
-		AddTooltip("#station"+i,discoveredStationsList[i].name);
-		$("#station"+i+"_bt").on("click", SelectStation.bind(this,discoveredStationsList[i].name));
+			<img src='"+GetImg(displayedStationsList[i].name)+"' alt="+displayedStationsList[i].name+" class='tdImg'>"+"<br>\
+				<span class='tdText' id='itemCount"+GetItemIDFromName(displayedStationsList[i].name)+"'>"+SpecialNumbers(displayedStationsList[i].count)+"</span></button>");
+		AddTooltip("#station"+i,displayedStationsList[i].name);
+		$("#station"+i+"_bt").on("click", SelectStation.bind(this,displayedStationsList[i].name));
 		if(lockSelectingNotOwnedStations){
 			$("#station"+i+"_bt").removeClass("unownedStation");
-			if(discoveredStationsList[i].count<=0&&!_isSpecialNumber(discoveredStationsList[i].count)&&discoveredStationsList[i].name!="Hand")$("#station"+i+"_bt").addClass("unownedStation");
+			if(displayedStationsList[i].count<=0&&!_isSpecialNumber(displayedStationsList[i].count)&&displayedStationsList[i].name!="Hand")$("#station"+i+"_bt").addClass("unownedStation");
 		}
 	}
 	SelectStation(selectedStation);
 }
-function UpdateItems(){for(let i=0;i<items.length;i++){$("#itemCount"+i).html(SpecialNumbers(items[i].count));}}
+//https://stackoverflow.com/questions/1206739/find-all-elements-on-a-page-whose-element-id-contains-a-certain-text-using-jquer
+function UpdateItems(){
+	for(let i=0;i<items.length;i++){$("#itemCount"+i).html(SpecialNumbers(items[i].count));$("#item"+i).toggleClass("unownedItem",(items[i].count==0));if(i<3){$("#move"+(i+1)).toggleClass("unownedItem",(items[i].count==0));}}
+	
+	//$("*[id^='craftable']"/*&&[id!='craftables']"*/).toggleClass("unownedItem",(_isStationOwned(selectedStation)));
+
+	/*let itemsNSList=items.filter(x=>!x.station);
+	let displayedItemsList=itemsNSList;if(hideUndiscoveredItems)displayedItemsList=displayedItemsList.filter(x=>discoveredItems.includes(x.name));
+	for(let i=0;i<displayedItemsList.length;i++){$("#item"+i).toggleClass("unownedItem",(displayedItemsList[i].count==0));}*/
+}
 
 function SelectStation(str){
-	if(!lockSelectingNotOwnedStations||(lockSelectingNotOwnedStations&&(GetItem(str).count>0||GetItem(str).count==-5||str=="Hand"))){
+	if(!lockSelectingNotOwnedStations||(lockSelectingNotOwnedStations&&(_isStationOwned(str)))){
 		selectedStation=str;
 		let craftablesTable="<table>";
 		let stationsList=new Array(0);stationsList.push(new Item("Hand","",true));stationsList=stationsList.concat(items.filter(x=>x.station));
@@ -143,7 +156,7 @@ function SelectStation(str){
 			craftablesTable+='<tr id="craftablesRow'+i+'">';
 			for(let j=0;j<itemsTableWidth;j++){
 				let id=(j+(itemsTableWidth*i));
-				craftablesTable+='<td class="tdItem" id="craft'+id+'"></td>';
+				craftablesTable+='<td class="tdItem" id="craftable'+id+'"></td>';
 			}
 			craftablesTable+='</tr>';
 		}
@@ -153,16 +166,16 @@ function SelectStation(str){
 
 		for(let i=0;i<discoveredCraftables.length;i++){
 			if(discoveredCraftables[i].unlocked){
-				$("#craft"+i).html("<button class='tdButton' id='"+('craft'+i)+"_bt'>\
+				$("#craftable"+i).html("<button class='tdButton' id='"+('craftable'+i)+"_bt'>\
 					<img src='"+GetImg(discoveredCraftables[i].itemName)+"' alt="+discoveredCraftables[i].itemName+" class='tdImg'>"+"<br>\
 						<span class='tdText'>"+SpecialNumbers(GetRecipe(discoveredCraftables[i].name).count)+"</span></button>");
-				AddTooltip("#craft"+i,discoveredCraftables[i].itemName+GetAllRecipeIngredients(discoveredCraftables[i].name));
-				if(_canCraft(discoveredCraftables[i].name)){$("#craft"+i+"_bt").on("click", CraftItem.bind(this,discoveredCraftables[i].name));$("#craft"+i+"_bt").removeClass("uncraftableItem");}
-				else{$("#craft"+i+"_bt").addClass("uncraftableItem");}
+				AddTooltip("#craftable"+i,discoveredCraftables[i].itemName+GetAllRecipeIngredients(discoveredCraftables[i].name));
+				if(_canCraft(discoveredCraftables[i].name)){$("#craftable"+i+"_bt").on("click", CraftItem.bind(this,discoveredCraftables[i].name));$("#craftable"+i+"_bt").removeClass("uncraftableItem");}
+				else{$("#craftable"+i+"_bt").addClass("uncraftableItem");}
 			}else{
-				$("#craft"+i).html("<img src='"+GetImg(discoveredCraftables[i].itemName)+"' alt="+discoveredCraftables[i].itemName+" class='tdImg'>"+"<br>\
+				$("#craftable"+i).html("<img src='"+GetImg(discoveredCraftables[i].itemName)+"' alt="+discoveredCraftables[i].itemName+" class='tdImg'>"+"<br>\
 						<span class='tdText'>"+SpecialNumbers(GetRecipe(discoveredCraftables[i].name).count)+"</span>");
-				AddTooltip("#craft"+i,discoveredCraftables[i].itemName+GetAllRecipeIngredients(discoveredCraftables[i].name));
+				AddTooltip("#craftable"+i,discoveredCraftables[i].itemName+GetAllRecipeIngredients(discoveredCraftables[i].name));
 			}
 		}
 		for(let i=0;i<discoveredStationsList.length;i++){
@@ -175,7 +188,7 @@ function SelectStation(str){
 
 function GetAllRecipeIngredients(str){	let r=GetRecipe(str);
 	let ingr="";
-	ingr+=" x"+SpecialNumbers(r.count);
+	if(!_isSpecialNumber(r.count))ingr+=" x"+r.count;
 	if(r.unlocked||!hideLockedRecipesIngredients){
 		if(displayChanceInIngredients){if(r.chance<100&&r.chance>0){ingr+="&nbsp;<span style='color:"+GetColorBasedOnChance(r.chance)+"'>"+r.chance+"%</span>";}}
 			if(displayStationInIngredients){if(r.station!=""){
@@ -195,10 +208,13 @@ function GetAllRecipeIngredients(str){	let r=GetRecipe(str);
 
 function GetRecipe(str){return recipes.find(x=>x.name==str);}
 function RecipeExists(n){return recipes.some(x=>x.name===n);}
+function RecipeExistsForInfiniteItem(n){return recipes.some(x=>x.name===n&&x.count==-5);}
 function _isRecipeUnlockableLocked(str){return recipes.some(x=>x.name==str&&!x.unlocked&&x.unlockable);}
 function _isRecipeLocked(str){return recipes.some(x=>x.name==str&&!x.unlocked);}
 function _isRecipeDiscovered(str){return (discoveredRecipes.some(x=>x.name==str)!=null);}
 function _isItemDiscovered(str){return (discoveredItems.some(x=>x.name==str)!=null);}
+function _isItemOwned(str){return GetItem(str).count>0||GetItem(str).count==-5;}
+function _isStationOwned(str){return _isItemOwned(str)||str=="Hand";}
 
 function RecipeAdd(
 	name,itemName,count=1,
@@ -207,8 +223,8 @@ function RecipeAdd(
 	item1="",item1Cost=1,
 	item2="",item2Cost=0,
 	item3="",item3Cost=0
-){let itemNameSet=itemName;if(itemName==""){itemNameSet=name;}let chanceSet=chance;if(chance<0)chanceSet=1;else if(chance>100||chance==0)chanceSet=100;
-	recipes.push(new Recipe(name,itemNameSet,count,chanceSet,true,false,station,stUses,item1,item1Cost,item2,item2Cost,item3,item3Cost));DisplayItems();}
+){let itemNameSet=itemName;if(itemName==""){itemNameSet=name;}let chanceSet=chance;if(chance<0){chanceSet=1;}else if(chance>100||chance==0){chanceSet=100;}let _count=count;if(!_isSpecialNumber(_count)){_count*=craftMult;}
+	recipes.push(new Recipe(name,itemNameSet,_count,chanceSet,true,false,station,stUses,item1,item1Cost,item2,item2Cost,item3,item3Cost));DisplayItems();}
 function RecipeAdd_L(name,itemName,count,chance,station,stUses,item1,item1Cost,item2,item2Cost,item3,item3Cost){RecipeAdd(name,itemName,count,chance,station,stUses,item1,item1Cost,item2,item2Cost,item3,item3Cost);let r=GetRecipe(name);r.unlocked=false;r.unlockable=true;}
 //function RecipeAdd_DIF(name,itemName,count,station,stUses,item1,item1Cost,item2,item2Cost,item3,item3Cost){RecipeAdd(name,itemName,count,100,station,stUses,item1,item1Cost,item2,item2Cost,item3,item3Cost);}
 //function RecipeAdd_DIF_L(name,itemName,count,station,stUses,item1,item1Cost,item2,item2Cost,item3,item3Cost){RecipeAddDIF(name,itemName,count,100,station,stUses,item1,item1Cost,item2,item2Cost,item3,item3Cost);let r=GetRecipe(name);r.unlocked=false;r.unlockable=true;}
@@ -275,26 +291,27 @@ function AutoRemoveRecipesWhenItemNotExist(){
 }
 
 function GiveStartingItems(){
-	if(!BaseItemsExist()){itemsNeededToMove=false;itemAlwaysUsedOnMove=false;console.warn("BASE ITEM IS MISSING");}
+	if(!_baseItemsExist()){itemsNeededToMove=false;itemAlwaysUsedOnMove=false;console.error("BASE ITEM IS MISSING");}
 
-	GiveItem("Rock",3);
-	GiveItem("Paper",3);
-	GiveItem("Scissors",3);
+	GiveItem("Rock",startItemCount,true);
+	GiveItem("Paper",startItemCount,true);
+	GiveItem("Scissors",startItemCount,true);
 	//GiveItem("Axe",-5);
 	RenewableItem("Wood",1,renewableStartItemS);
 	if(discoverAllItems)DiscoverAllItems();
 	if(cheatAllItems)CheatAllItems();
 	if(unlockAllRecipes)UnlockAllRecipes();
 }
-function GiveItemsWin(wonAgainst){
+function GiveItemsWin(usedItem){
 	//if(classicGameRules){
 		let it="";
-		switch(wonAgainst){
+		switch(usedItem){
 			case "Rock":it="Scissors";break;
 			case "Paper":it="Rock";break;
 			case "Scissors":it="Paper";break;
 		}
-		GiveItem(it);
+		GiveItem(it,dropMult);
+		if(returnItemOnWin){GiveItem(usedItem);}
 	/*}else{
 		let it="";
 		switch(wonAgainst){
@@ -316,10 +333,10 @@ function UseItemsLose(lostUsing){
 		UseItem(it);
 	//}
 }
-function BaseItemsExist(){return (ItemExists("Rock")&&ItemExists("Paper")&&ItemExists("Scissors"));}
+function _baseItemsExist(){return (ItemExists("Rock")&&ItemExists("Paper")&&ItemExists("Scissors"));}
 
 function DiscoverAllItems(){for(let i=0;i<items.length;i++){DiscoverItem(items[i].name);}}
-function CheatAllItems(){for(let i=0;i<items.length;i++){GiveItemID(i,999);}}
+function CheatAllItems(){for(let i=0;i<items.length;i++){if(!RecipeExistsForInfiniteItem(items[i].name)){GiveItemID(i,999);}else{GiveItemID(i,-5);}}}
 function UnlockAllRecipes(){for(let i=0;i<recipes.length;i++){RecipeUnlock(recipes[i].name);}}
 
 function CraftItem(name){
@@ -344,23 +361,24 @@ function CraftItem(name){
 				if(item3!=null)item3.count-=r.item3Cost;
 				if(stItem!=null&&stItem!=""){if(stItem.count!=-5)stItem.count-=r.stUses;}
 				if(rnd<=r.chance){
-					itemResult.count+=r.count;DiscoverItem(itemResult.name);
+					itemResult.count+=r.count;DiscoverItem(itemResult.name);UpdateItems();
 					if(debug){
 						let _debugString="";
 						if(item1!=null&&item2!=null&&item3!=null)_debugString="Item crafted: "+itemResult.name+" x"+r.count+" times for "+r.item1Cost+"x "+item1.name+" | "+r.item2Cost+"x "+item2.name+" | "+r.item3Cost+"x "+item3.name+" || at "+r.station+" ("+r.stUses+"x uses)";
 						if(item1!=null&&item2!=null&&item3==null)_debugString="Item crafted: "+itemResult.name+" x"+r.count+" times for "+r.item1Cost+"x "+item1.name+" | "+r.item2Cost+"x "+item2.name+" || at "+r.station+" ("+r.stUses+"x uses)";
 						if(item1!=null&&item2==null&&item3==null)_debugString="Item crafted: "+itemResult.name+" x"+r.count+" times for "+r.item1Cost+"x "+item1.name+" || at "+r.station+" ("+r.stUses+"x uses)";
 						if((item1==null&&item2==null&&item3==null)&&(stItem!=null&&stItem!=""))_debugString="Item crafted: "+itemResult.name+" x"+r.count+" times "+"at "+r.station+" ("+r.stUses+"x uses)";
-						console.log("%c"+_debugString,"color: #87963b");
+						if(_debugString!="")console.log("%c"+_debugString,"color: #87963b");
 					}
 				}else{
 					if(debug){
+						UpdateItems();
 						let _debugString="";
 						if(item1!=null&&item2!=null&&item3!=null)_debugString="Item could not be crafted ("+rnd+" / "+r.chance+"), wasted: "+r.item1Cost+"x "+item1.name+" | "+r.item2Cost+"x "+item2.name+" | "+r.item3Cost+"x "+item3.name+" || at "+r.station+" ("+r.stUses+"x uses)";
 						if(item1!=null&&item2!=null&&item3==null)_debugString="Item could not be crafted ("+rnd+" / "+r.chance+"), wasted: "+r.item1Cost+"x "+item1.name+" | "+r.item2Cost+"x "+item2.name+" || at "+r.station+" ("+r.stUses+"x uses)";
 						if(item1!=null&&item2==null&&item3==null)_debugString="Item could not be crafted ("+rnd+" / "+r.chance+"), wasted: "+r.item1Cost+"x "+item1.name+" || at "+r.station+" ("+r.stUses+"x uses)";
 						if((item1==null&&item2==null&&item3==null)&&(stItem!=null&&stItem!=""))_debugString="Item could not be crafted ("+rnd+" / "+r.chance+"), wasted: "+r.station+" ("+r.stUses+"x uses)";
-						console.log("%c"+_debugString,"color: #96753b");
+						if(_debugString!="")console.log("%c"+_debugString,"color: #96753b");
 					}
 				}
 			}else{
@@ -372,6 +390,7 @@ function CraftItem(name){
 		}
 	}else{console.warn("NO RECIPE FOUND BY NAME: "+name);}
 	DisplayItems();
+	if(name=="Axe-Hand"){SelectStation("Axe");}
 }
 
 function _canCraft(
